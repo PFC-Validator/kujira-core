@@ -58,15 +58,11 @@ BUILD_FLAGS := -tags "$(build_tags)" -ldflags '$(ldflags)'
 
 #### Command List ####
 
-check-go-version:
-	@if ! go version | grep -Eq "go1.19.[3-7]"; then \
-		echo "\033[0;31mERROR:\033[0m Go version 1.19.3 through 1.19.7 is required for compiling kujirad. Installed version:" "$(shell go version)"; \
-		exit 1; \
-	fi
+
 
 all: lint install
 
-install: check-go-version go.sum
+install: go.sum
 		go install $(BUILD_FLAGS) ./cmd/kujirad
 
 go.sum: go.mod
@@ -76,5 +72,5 @@ go.sum: go.mod
 lint:
 	golangci-lint run --out-format=tab
 
-build: check-go-version
+build: go.mod
 	go build $(BUILD_FLAGS) -o ./build/kujirad ./cmd/kujirad
